@@ -20,7 +20,7 @@ def main():
                     break
         else:
             print("Exiting the game.")
-            break  # Exit the loop if the user chooses to quit
+            break 
 
     cap.release()
     cv2.destroyAllWindows()
