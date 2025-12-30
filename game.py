@@ -7,10 +7,10 @@ import pygame
 # sounds
 pygame.mixer.init()
 
-jump_sound = pygame.mixer.Sound('sounds/jump.wav')
-game_over_sound = pygame.mixer.Sound('sounds/game_over.mp3')
-start_sound = pygame.mixer.Sound('sounds/start.wav')
-pygame.mixer.music.load('sounds/background.mp3')
+jump_sound = pygame.mixer.Sound('assets/sounds/jump.wav')
+game_over_sound = pygame.mixer.Sound('assets/sounds/game_over.mp3')
+start_sound = pygame.mixer.Sound('assets/sounds/start.wav')
+pygame.mixer.music.load('assets/sounds/background.mp3')
 pygame.mixer.music.set_volume(0.1)
 pygame.mixer.music.play(-1, 0.0)
 
@@ -46,8 +46,8 @@ screen_width = frame_width
 screen_height = frame_height
 
 # sprites
-player_sprite = cv2.imread('img/character_bato.png', cv2.IMREAD_UNCHANGED)
-platform_sprite = cv2.imread('img/platform.png', cv2.IMREAD_UNCHANGED)
+player_sprite = cv2.imread('assets/img/character_bato.png', cv2.IMREAD_UNCHANGED)
+platform_sprite = cv2.imread('assets/img/platform.png', cv2.IMREAD_UNCHANGED)
 player_sprite = cv2.resize(player_sprite, (player_width, player_height))
 platform_sprite = cv2.resize(platform_sprite, (platform_width, platform_height))
 

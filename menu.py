@@ -9,9 +9,9 @@ def show_menu():
     pygame.display.set_caption("Game Menu")
 
     # Load sprites
-    title_sprite = pygame.image.load('img/title.png')
-    play_button_sprite = pygame.image.load('img/play.png')
-    exit_button_sprite = pygame.image.load('img/cancel.png')
+    title_sprite = pygame.image.load('assets/img/title.png')
+    play_button_sprite = pygame.image.load('assets/img/play.png')
+    exit_button_sprite = pygame.image.load('assets/img/cancel.png')
 
     title_sprite = pygame.transform.scale(title_sprite, (180, 100))
     play_button_sprite = pygame.transform.scale(play_button_sprite, (110, 35))
