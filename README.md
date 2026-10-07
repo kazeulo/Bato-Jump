@@ -1,5 +1,7 @@
 # Bato-Jump
 
+![Bato-Jump preview](assets/img/bato-jump.png)
+
 **Bato-Jump** is a fun and interactive 2D jumping game inspired by Doodle Jump and built using Python, OpenCV, and Pygame. The game uses your webcam to detect your face, and you control the player by moving your head left and right. Jump from platform to platform, avoid falling, and rack up your score!
 
 ## Features
