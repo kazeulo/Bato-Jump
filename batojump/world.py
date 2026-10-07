@@ -1,0 +1,73 @@
+"""Pure game state and rules (no I/O), so it can be tested headlessly."""
+import random
+from dataclasses import dataclass, field
+
+from .config import PHYSICS, PLATFORM, PLAYER
+
+
+@dataclass
+class World:
+    width: int
+    height: int
+    x: int = 0
+    y: float = 0
+    velocity: float = 0
+    score: int = 0
+    platforms: list = field(default_factory=list)
+
+    def __post_init__(self):
+        self.reset()
+
+    def reset(self):
+        first = (self.width // 2 - PLATFORM.width // 2, self.height - PLATFORM.height)
+        self.platforms = [first]
+        self.x = self.width // 2 - PLAYER.width // 2
+        self.y = first[1] - PLAYER.height
+        self.velocity = PHYSICS.jump_strength
+        self.score = 0
+        self._fill_above()
+
+    def move_to(self, center_x):
+        """Place the player horizontally, clamped to the screen."""
+        self.x = max(0, min(center_x - PLAYER.width // 2, self.width - PLAYER.width))
+
+    def step(self):
+        """Advance one tick. Returns True if the player bounced this tick."""
+        self.velocity += PHYSICS.gravity
+        self.y += self.velocity
+        bounced = self._bounce()
+        self._scroll()
+        return bounced
+
+    @property
+    def game_over(self):
+        return self.y > self.height
+
+    def _bounce(self):
+        if self.velocity <= 0:
+            return False
+        feet = self.y + PLAYER.height
+        prev_feet = feet - self.velocity
+        for px, py in self.platforms:
+            overlaps_x = px < self.x + PLAYER.width and px + PLATFORM.width > self.x
+            if overlaps_x and prev_feet <= py <= feet:
+                self.velocity = PHYSICS.jump_strength
+                self.y = py - PLAYER.height
+                return True
+        return False
+
+    def _scroll(self):
+        if self.y < PHYSICS.scroll_line:
+            diff = PHYSICS.scroll_line - self.y
+            self.y += diff
+            self.platforms = [(px, py + diff) for px, py in self.platforms]
+            self.score += int(diff)
+        self.platforms = [p for p in self.platforms if p[1] <= self.height]
+        self._fill_above()
+
+    def _fill_above(self):
+        top = min((py for _, py in self.platforms), default=self.height)
+        while top > 0:
+            top -= random.randint(PLATFORM.min_gap_y, PLATFORM.max_gap_y)
+            x = random.randint(PLATFORM.min_x, self.width - PLATFORM.width)
+            self.platforms.append((x, top))

@@ -10,15 +10,28 @@
 - **Game Over Condition**: The game ends when the player falls off the screen, and the final score is displayed.
 - **Sound Effects**: Sound effects like jump sounds, background music, and a game over sound add to the experience.
 
-## Requirements
-
-To run the game, you will need to have the following Python libraries installed:
-
-- **OpenCV** for webcam access and face detection.
-- **Pygame** for sound effects and game mechanics.
-- **NumPy** for array manipulation.
-
-You can install these libraries using pip:
+## Setup
 
 ```bash
-pip install opencv-python pygame numpy
+pip install -r requirements.txt
+python main.py
+```
+
+Move your head left and right to steer. Press `q` to quit a run.
+
+## Project layout
+
+```
+main.py                 entry point (menu -> game -> menu)
+batojump/
+  config.py             constants, asset paths
+  world.py              pure game state and physics (no I/O)
+  face_tracker.py       webcam capture + Haar-cascade face detection
+  renderer.py           sprite overlay and HUD drawing
+  audio.py              sound effects and music
+  menu.py               pygame start menu
+  game.py               play session tying the pieces together
+tests/                  headless tests for world and rendering helpers
+```
+
+Run tests with `pip install pytest && python -m pytest tests`.
