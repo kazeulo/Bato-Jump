@@ -23,6 +23,15 @@ Pick a member on the menu, then move your head left and right to steer. `P` paus
 
 Sprites live in `assets/img/sprites/` (several unused ones, such as enemies, items and special platforms, are ready for future features).
 
+## Limitations
+
+- **Dependent on camera quality**: Steering relies entirely on face detection from your webcam. A low-resolution camera, poor or uneven lighting, a cluttered background, or a face that is turned away or partly covered can make detection jittery or lose the face altogether, which makes the player harder to control. For the best experience, use a decent webcam in a well-lit room and face it directly.
+- **Single player, head position only**: The game follows the largest face on screen, and nothing else controls it. A second person behind you can steal control if their face looks bigger.
+- **Detector weakness**: Haar cascades handle only frontal faces. They work poorly with glasses glare, masks, hats, tilted heads and backlighting, and can also pick up false positives in the background.
+- **Frame rate**: Detection runs on every frame on the CPU. On a slow machine the frame rate drops, and because the physics is tied to frames, the game then runs in slow motion.
+- **No calibration**: A user sitting far from the camera has to lean a long way to reach the screen edges, because the whole camera width maps to the play area.
+- **Face lost**: The player simply stops moving until the face is found again. It still falls and can die.
+
 ## Project layout
 
 ```
@@ -33,6 +42,7 @@ starhop/
   face_tracker.py       webcam capture + Haar-cascade face detection
   renderer.py           sprite overlay and HUD drawing
   audio.py              sound effects and music
+  highscore.py          saved best score
   menu.py               pygame start menu
   game.py               play session tying the pieces together
 tests/                  headless tests for world and rendering helpers

@@ -78,7 +78,7 @@ class _Menu:
         self.help_rect = pygame.Rect(0, 0, 310, 44)
         self.help_rect.midtop = (self.cx, 386)
 
-    # --- input -----------------------------------------------------------------
+    # input 
     def run(self):
         clock = pygame.time.Clock()
         while True:
@@ -116,7 +116,7 @@ class _Menu:
                     return None
         return _CONTINUE
 
-    # --- drawing ---------------------------------------------------------------
+    # drawing 
     def _draw(self, t, mouse):
         self._draw_background(t)
         self._draw_title(t)
