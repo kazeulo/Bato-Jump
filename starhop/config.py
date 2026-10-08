@@ -7,6 +7,7 @@ ASSETS = ROOT / "assets"
 IMG = ASSETS / "img"
 SOUNDS = ASSETS / "sounds"
 SPRITES = IMG / "sprites"
+FACE_MODEL = ROOT / "models" / "face_detection_yunet_2023mar.onnx"
 
 CHARACTERS = ("cyan", "holo", "lilac", "pink")
 DEFAULT_CHARACTER = "pink"
