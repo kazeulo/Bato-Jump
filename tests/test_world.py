@@ -1,8 +1,8 @@
 import numpy as np
 
-from batojump.config import PLAYER
-from batojump.renderer import overlay_sprite
-from batojump.world import World
+from starhop.config import PLAYER
+from starhop.renderer import overlay_sprite
+from starhop.world import World
 
 
 def test_player_bounces_on_start_platform_and_scores():
@@ -66,7 +66,7 @@ def test_platform_gaps_grow_with_score_but_are_capped():
 
 
 def test_highscore_roundtrip(tmp_path, monkeypatch):
-    from batojump import config, highscore
+    from starhop import config, highscore
     monkeypatch.setattr(config, "HIGHSCORE_FILE", tmp_path / "hs.txt")
     assert highscore.load() == 0
     highscore.save(42)

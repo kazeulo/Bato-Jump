@@ -39,14 +39,15 @@ class _Menu:
         self.selected = selected
         self.screen = pygame.display.set_mode(config.MENU_SIZE)
         pygame.display.set_caption(config.WINDOW_TITLE)
-        self.cx = self.screen.get_width() // 2
+        width = self.screen.get_width()
+        self.cx = width // 2
         self.best = highscore.load()
         self._load_assets()
         self._layout()
 
     def _load_assets(self):
-        w, h = config.MENU_SIZE
-        self.background = _image("background_tile_seamless.png", (w, w * 3 // 2))
+        self.background = pygame.image.load(
+            str(config.SPRITES / "background_tile_seamless.png")).convert()
         self.title_font = pygame.font.SysFont("arial", 50, bold=True)
         self.sub_font = pygame.font.SysFont("arial", 24, bold=True)
         self.button_font = pygame.font.SysFont("arial", 26, bold=True)
@@ -67,14 +68,15 @@ class _Menu:
         n = len(config.CHARACTERS)
         left = self.cx - (n * card_w + (n - 1) * gap) // 2
         self.cards = {
-            name: pygame.Rect(left + i * (card_w + gap), 140, card_w, card_h)
+            name: pygame.Rect(left + i * (card_w + gap), 150, card_w, card_h)
             for i, name in enumerate(config.CHARACTERS)
         }
         self.play_rect = pygame.Rect(0, 0, 180, 46)
-        self.play_rect.midtop = (self.cx, 312)
+        self.play_rect.midtop = (self.cx - 100, 326)
         self.exit_rect = pygame.Rect(0, 0, 180, 46)
-        self.exit_rect.midtop = (self.cx, 366)
-        self.help_rect = pygame.Rect(16, 424, config.MENU_SIZE[0] - 32, 40)
+        self.exit_rect.midtop = (self.cx + 100, 326)
+        self.help_rect = pygame.Rect(0, 0, 310, 44)
+        self.help_rect.midtop = (self.cx, 386)
 
     # --- input -----------------------------------------------------------------
     def run(self):
@@ -121,32 +123,35 @@ class _Menu:
         for name, rect in self.cards.items():
             self._draw_card(name, rect, t, rect.collidepoint(mouse))
 
+        heading = self.small_font.render("CHOOSE YOUR PLAYER", True, MUTED)
+        self.screen.blit(heading, heading.get_rect(midtop=(self.cx, 126)))
         label = self.label_font.render(NAMES[self.selected], True, NEON)
-        self.screen.blit(label, label.get_rect(midtop=(self.cx, 262)))
+        self.screen.blit(label, label.get_rect(midtop=(self.cx, 270)))
         hint = self.small_font.render("< >  choose     Enter  play     Esc  exit", True, MUTED)
-        self.screen.blit(hint, hint.get_rect(midtop=(self.cx, 282)))
+        self.screen.blit(hint, hint.get_rect(midtop=(self.cx, 292)))
 
         self._draw_button(self.play_rect, "PLAY", mouse)
         self._draw_button(self.exit_rect, "EXIT", mouse)
         self._draw_help()
 
     def _draw_background(self, t):
-        h = self.background.get_height()
-        y = -int(t * SCROLL_SPEED) % h  # scroll downward, wrapping the tile
-        self.screen.blit(self.background, (0, y))
-        self.screen.blit(self.background, (0, y - h))
+        tile_w, tile_h = self.background.get_size()
+        y = -int(t * SCROLL_SPEED) % tile_h  # scroll downward, wrapping the tile
+        for x in range(0, config.MENU_SIZE[0], tile_w):
+            self.screen.blit(self.background, (x, y))
+            self.screen.blit(self.background, (x, y - tile_h))
 
     def _draw_title(self, t):
         pulse = 0.5 + 0.5 * math.sin(t * 2)
         glow = self.glow.copy()
         glow.set_alpha(int(90 + 120 * pulse))
         for dx, dy in ((-2, 0), (2, 0), (0, -2), (0, 2)):
-            self.screen.blit(glow, glow.get_rect(midtop=(self.cx + dx, 22 + dy)))
-        self.screen.blit(self.title_line, self.title_line.get_rect(midtop=(self.cx, 22)))
-        self.screen.blit(self.subtitle, self.subtitle.get_rect(midtop=(self.cx, 82)))
+            self.screen.blit(glow, glow.get_rect(midtop=(self.cx + dx, 10 + dy)))
+        self.screen.blit(self.title_line, self.title_line.get_rect(midtop=(self.cx, 10)))
+        self.screen.blit(self.subtitle, self.subtitle.get_rect(midtop=(self.cx, 66)))
         if self.best:
             best = self.small_font.render(f"BEST  {self.best}", True, MUTED)
-            self.screen.blit(best, best.get_rect(midtop=(self.cx, 112)))
+            self.screen.blit(best, best.get_rect(midtop=(self.cx, 97)))
 
     def _draw_card(self, name, rect, t, hovered):
         chosen = name == self.selected

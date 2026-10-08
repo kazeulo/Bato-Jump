@@ -1,10 +1,10 @@
 import pygame
 
-from batojump import config
-from batojump.audio import Audio
-from batojump.face_tracker import FaceTracker
-from batojump.game import Game
-from batojump.menu import show_menu
+from starhop import config
+from starhop.audio import Audio
+from starhop.face_tracker import FaceTracker
+from starhop.game import Game
+from starhop.menu import show_menu
 
 
 def main():
