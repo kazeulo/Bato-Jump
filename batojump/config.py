@@ -6,11 +6,21 @@ ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "assets"
 IMG = ASSETS / "img"
 SOUNDS = ASSETS / "sounds"
+SPRITES = IMG / "sprites"
 
-WINDOW_TITLE = "Bato Jump"
-MENU_SIZE = (400, 300)
+CHARACTERS = ("cyan", "holo", "lilac", "pink")
+DEFAULT_CHARACTER = "pink"
+
+GAME_TITLE = "Star Hop"
+TITLE_LINES = ("STAR HOP", "F A C E   J U M P")  # menu logo: big line, spaced subtitle
+WINDOW_TITLE = GAME_TITLE
+MENU_SIZE = (400, 476)
+DISPLAY_SCALE = 1.5  # game window size relative to the webcam frame
 CAMERA_INDEX = 0
 QUIT_KEY = ord("q")
+PAUSE_KEY = ord("p")
+RESTART_KEYS = (ord("r"), ord(" "))
+MENU_KEYS = (27,)  # Esc
 
 
 @dataclass(frozen=True)
@@ -22,13 +32,13 @@ class Physics:
 
 @dataclass(frozen=True)
 class PlayerSpec:
-    width: int = 50
+    width: int = 42  # sprites are 80x96
     height: int = 50
 
 
 @dataclass(frozen=True)
 class PlatformSpec:
-    width: int = 80
+    width: int = 84  # sprite is 120x28
     height: int = 20
     min_gap_y: int = 80
     max_gap_y: int = 100
@@ -39,7 +49,6 @@ PHYSICS = Physics()
 PLAYER = PlayerSpec()
 PLATFORM = PlatformSpec()
 MUSIC_VOLUME = 0.1
-GAME_OVER_DELAY_MS = 2000
 STEER_SMOOTHING = 0.5  # 0..1, fraction of the distance to the face covered per frame
 GAP_GROWTH_PER_SCORE = 1 / 400  # platforms spread out as the score climbs
 MAX_EXTRA_GAP = 50

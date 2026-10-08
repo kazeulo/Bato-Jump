@@ -16,5 +16,11 @@ class Audio:
     def play_music(self):
         pygame.mixer.music.play(-1)
 
+    def pause_music(self):
+        pygame.mixer.music.pause()
+
+    def resume_music(self):
+        pygame.mixer.music.unpause()
+
     def stop_music(self):
         pygame.mixer.music.stop()

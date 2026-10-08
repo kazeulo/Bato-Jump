@@ -1,8 +1,6 @@
-# Bato-Jump
+# Star Hop
 
-![Bato-Jump preview](assets/img/bato-jump.png)
-
-**Bato-Jump** is a fun and interactive 2D jumping game inspired by Doodle Jump and built using Python, OpenCV, and Pygame. The game uses your webcam to detect your face, and you control the player by moving your head left and right. Jump from platform to platform, avoid falling, and rack up your score!
+**Star Hop** (formerly Bato-Jump) is a fun and interactive 2D jumping game inspired by Doodle Jump and built using Python, OpenCV, and Pygame. The game uses your webcam to detect your face, and you control the player by moving your head left and right. Jump from platform to platform, avoid falling, and rack up your score!
 
 ## Features
 
@@ -19,7 +17,9 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Move your head left and right to steer. Press `q` to quit a run.
+Pick a member on the menu, then move your head left and right to steer. `P` pauses, `Q` returns to the menu, and `R`/Space retries after game over.
+
+Sprites live in `assets/img/sprites/` (several unused ones, such as enemies, items and special platforms, are ready for future features).
 
 ## Project layout
 

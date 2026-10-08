@@ -14,6 +14,7 @@ class World:
     y: float = 0
     velocity: float = 0
     score: int = 0
+    facing: int = 0  # -1 left, 1 right, 0 not moved yet (front pose)
     platforms: list = field(default_factory=list)
 
     def __post_init__(self):
@@ -26,16 +27,25 @@ class World:
         self.y = first[1] - PLAYER.height
         self.velocity = PHYSICS.jump_strength
         self.score = 0
+        self.facing = 0
         self._fill_above()
 
     def move_to(self, center_x):
         """Place the player horizontally, clamped to the screen."""
-        self.x = self._clamp_x(center_x - PLAYER.width // 2)
+        self._set_x(center_x - PLAYER.width // 2)
 
     def steer_toward(self, center_x):
         """Ease the player toward a target x so detector jitter doesn't shake it."""
         target = center_x - PLAYER.width // 2
-        self.x = self._clamp_x(self.x + (target - self.x) * STEER_SMOOTHING)
+        self._set_x(self.x + (target - self.x) * STEER_SMOOTHING)
+
+    def _set_x(self, x):
+        x = self._clamp_x(x)
+        if x - self.x > 0.5:
+            self.facing = 1
+        elif self.x - x > 0.5:
+            self.facing = -1
+        self.x = x
 
     def _clamp_x(self, x):
         return max(0, min(x, self.width - PLAYER.width))
