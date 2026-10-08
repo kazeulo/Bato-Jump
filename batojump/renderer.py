@@ -36,17 +36,23 @@ class Renderer:
         self._player = _load_sprite("character_bato.png", (PLAYER.width, PLAYER.height))
         self._platform = _load_sprite("platform.png", (PLATFORM.width, PLATFORM.height))
 
-    def draw(self, frame, world):
+    def draw(self, frame, world, best=0, face_found=True):
         overlay_sprite(frame, self._player, int(world.x), int(world.y))
         for px, py in world.platforms:
             overlay_sprite(frame, self._platform, int(px), int(py))
         cv2.putText(frame, f"Score: {world.score}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
+        cv2.putText(frame, f"Best: {max(best, world.score)}", (10, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 0), 2)
+        if not face_found:
+            self._centered(frame, "No face detected", frame.shape[0] - 20, 0.8, 2)
 
-    def draw_game_over(self, frame, score):
+    def draw_game_over(self, frame, score, best, new_best):
         h = frame.shape[0]
         self._centered(frame, "GAME OVER", h // 2, 2, 3)
         self._centered(frame, f"Final Score: {score}", h // 2 + 40, 1, 2)
+        label = "New best!" if new_best else f"Best: {best}"
+        self._centered(frame, label, h // 2 + 75, 0.8, 2)
 
     @staticmethod
     def _centered(frame, text, y, scale, thickness):

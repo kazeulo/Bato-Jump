@@ -40,3 +40,7 @@ PLAYER = PlayerSpec()
 PLATFORM = PlatformSpec()
 MUSIC_VOLUME = 0.1
 GAME_OVER_DELAY_MS = 2000
+STEER_SMOOTHING = 0.5  # 0..1, fraction of the distance to the face covered per frame
+GAP_GROWTH_PER_SCORE = 1 / 400  # platforms spread out as the score climbs
+MAX_EXTRA_GAP = 50
+HIGHSCORE_FILE = ROOT / "highscore.txt"

@@ -2,14 +2,15 @@
 import random
 from dataclasses import dataclass, field
 
-from .config import PHYSICS, PLATFORM, PLAYER
+from .config import (GAP_GROWTH_PER_SCORE, MAX_EXTRA_GAP, PHYSICS, PLATFORM,
+                     PLAYER, STEER_SMOOTHING)
 
 
 @dataclass
 class World:
     width: int
     height: int
-    x: int = 0
+    x: float = 0
     y: float = 0
     velocity: float = 0
     score: int = 0
@@ -29,7 +30,19 @@ class World:
 
     def move_to(self, center_x):
         """Place the player horizontally, clamped to the screen."""
-        self.x = max(0, min(center_x - PLAYER.width // 2, self.width - PLAYER.width))
+        self.x = self._clamp_x(center_x - PLAYER.width // 2)
+
+    def steer_toward(self, center_x):
+        """Ease the player toward a target x so detector jitter doesn't shake it."""
+        target = center_x - PLAYER.width // 2
+        self.x = self._clamp_x(self.x + (target - self.x) * STEER_SMOOTHING)
+
+    def _clamp_x(self, x):
+        return max(0, min(x, self.width - PLAYER.width))
+
+    @property
+    def extra_gap(self):
+        return min(MAX_EXTRA_GAP, int(self.score * GAP_GROWTH_PER_SCORE))
 
     def step(self):
         """Advance one tick. Returns True if the player bounced this tick."""
@@ -68,6 +81,6 @@ class World:
     def _fill_above(self):
         top = min((py for _, py in self.platforms), default=self.height)
         while top > 0:
-            top -= random.randint(PLATFORM.min_gap_y, PLATFORM.max_gap_y)
+            top -= random.randint(PLATFORM.min_gap_y, PLATFORM.max_gap_y) + self.extra_gap
             x = random.randint(PLATFORM.min_x, self.width - PLATFORM.width)
             self.platforms.append((x, top))

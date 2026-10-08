@@ -48,3 +48,26 @@ def test_overlay_clips_at_edges():
     overlay_sprite(frame, sprite, -2, 8)
     overlay_sprite(frame, sprite, 20, 20)  # fully off-screen: no-op
     assert frame.sum() == 3 * 255 * 3 * 2
+
+
+def test_steering_eases_toward_target_without_overshoot():
+    w = World(640, 480)
+    w.move_to(100)
+    start = w.x
+    w.steer_toward(500)
+    assert start < w.x < 500 - PLAYER.width // 2
+
+
+def test_platform_gaps_grow_with_score_but_are_capped():
+    w = World(640, 480)
+    assert w.extra_gap == 0
+    w.score = 10**9
+    assert 0 < w.extra_gap <= 50
+
+
+def test_highscore_roundtrip(tmp_path, monkeypatch):
+    from batojump import config, highscore
+    monkeypatch.setattr(config, "HIGHSCORE_FILE", tmp_path / "hs.txt")
+    assert highscore.load() == 0
+    highscore.save(42)
+    assert highscore.load() == 42

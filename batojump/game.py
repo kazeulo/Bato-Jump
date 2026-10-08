@@ -1,7 +1,7 @@
 """One play session: webcam in, rendered frames out."""
 import cv2
 
-from . import config
+from . import config, highscore
 from .audio import Audio
 from .face_tracker import FaceTracker
 from .renderer import Renderer
@@ -14,6 +14,7 @@ class Game:
         self.audio = audio
         self.renderer = Renderer()
         self.world = World(tracker.width, tracker.height)
+        self.best = highscore.load()
 
     def run(self):
         """Play until game over or quit key. Returns True if the player died."""
@@ -28,7 +29,7 @@ class Game:
 
                 center_x = self.tracker.face_center_x(frame)
                 if center_x is not None:
-                    self.world.move_to(center_x)
+                    self.world.steer_toward(center_x)
 
                 if self.world.step():
                     self.audio.jump.play()
@@ -37,7 +38,7 @@ class Game:
                     self._show_game_over(frame)
                     return True
 
-                self.renderer.draw(frame, self.world)
+                self.renderer.draw(frame, self.world, self.best, center_x is not None)
                 cv2.imshow(config.WINDOW_TITLE, frame)
                 if cv2.waitKey(1) & 0xFF == config.QUIT_KEY:
                     return False
@@ -48,6 +49,11 @@ class Game:
     def _show_game_over(self, frame):
         self.audio.stop_music()
         self.audio.game_over.play()
-        self.renderer.draw_game_over(frame, self.world.score)
+        score = self.world.score
+        new_best = score > self.best
+        if new_best:
+            self.best = score
+            highscore.save(score)
+        self.renderer.draw_game_over(frame, score, self.best, new_best)
         cv2.imshow(config.WINDOW_TITLE, frame)
         cv2.waitKey(config.GAME_OVER_DELAY_MS)
